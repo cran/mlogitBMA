@@ -256,6 +256,8 @@
     x <- x[, remaining, drop = FALSE]
     x <- data.frame(x)
     fac.levels <- fac.levels[remaining]
+    prior.param <- prior.param[remaining]
+    names.arg <- names.arg[remaining]
     output.names <- list()
     for (i in 1:length(var.names)) {
         if (is.factor(x[, i])) 
@@ -653,11 +655,12 @@ function (f, data,
 	glm.family, 
 	approx=FALSE, include.intercepts=TRUE, # HS
 	wt = rep(1, nrow(data)), strict = FALSE, 
-    prior.param = c(rep(0.5, ncol(x))), OR = 20, maxCol = 30, 
+    prior.param =c(rep(0.5, ncol(x))), OR = 20, maxCol = 30, 
     OR.fix = 2, nbest = 150, dispersion = NULL, factor.type = TRUE, 
     factor.prior.adjust = FALSE, occam.window = TRUE, 
     verbose=FALSE, # HS
-    ...) 
+    ...
+    ) 
 {
 	# This function is modified bic.glm.formula from the BMA package. 
 	# Sections marked by 'HS' are the modified parts.
@@ -707,7 +710,7 @@ function (f, data,
             cnames <- c(cnames, colnames(mm)[sel])
         }
     }
-    moddata <- moddata[, -1]
+    moddata <- moddata[, -1, drop=FALSE]
     cnames <- gsub(":", ".", cnames)
     moddata <- moddata
     colnames(moddata) <- c(cnames)
@@ -727,7 +730,8 @@ function (f, data,
         dispersion = dispersion, factor.type = factor.type, factor.prior.adjust = factor.prior.adjust, 
         occam.window = occam.window, call = cl, 
         verbose=verbose, # HS
-        ...)
+        ...
+        )
 }
 
 "bic.glm.bg.matrix" <- bic.glm.bg.data.frame
