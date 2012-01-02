@@ -1,3 +1,6 @@
+CHANGES for Version 0.1-4 (01/02/2012):
+- the package mlogit added to the 'Suggests:' field, since it is needed in tests.
+
 CHANGES for Version 0.1-3 (2010-12-30):
 - fixed bug in big.glm.bg.R, reported by Hiroshi Mamiya
 

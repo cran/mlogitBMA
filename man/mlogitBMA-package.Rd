@@ -12,8 +12,8 @@ Provides a modified function \code{\link[BMA]{bic.glm}} of the \pkg{BMA} package
 \details{
 \tabular{ll}{
 Package: \tab mlogitBMA\cr
-Version: \tab 0.1-3 \cr
-Date: \tab 2010-12-30\cr
+Version: \tab 0.1-4 \cr
+Date: \tab 2012-01-02\cr
 Depends: \tab R (>= 2.9.0), BMA, abind, maxLik \cr
 }
 The main function of the package is \code{\link{bic.mlogit}} which runs the Bayesian Model Averaging on multinomial logit data. Results can be explored using \code{\link{summary.bic.mlogit}}, \code{\link{imageplot.mlogit}}, or \code{\link{plot.bic.mlogit}} functions.
