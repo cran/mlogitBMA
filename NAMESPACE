@@ -1,0 +1,22 @@
+#useDynLib(mlogitBMA)
+
+# export functions
+export(
+	bic.mlogit,
+	imageplot.mlogit,
+	estimate.mlogit,
+	mlogit2logit,
+	mnl.spec
+)
+
+S3method(plot, bic.mlogit)
+S3method(summary, bic.mlogit)
+S3method(summary, mnl.spec)
+S3method(summary, mnl)
+S3method(print, summary.mnl)
+S3method(estimate.mlogit, formula)
+S3method(estimate.mlogit, mnl.spec)
+S3method(estimate.mlogit, bic.mlogit)
+S3method(estimate.mlogit, list)
+
+

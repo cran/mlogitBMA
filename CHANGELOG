@@ -1,3 +1,8 @@
+CHANGES for Version 0.1-5 (02/21/2012):
+- NAMESPACE added
+- bic.glm.bg synchronized with bic.glm in BMA
+- plot.bic.glm replaced by plot
+
 CHANGES for Version 0.1-4 (01/02/2012):
 - the package mlogit added to the 'Suggests:' field, since it is needed in tests.
 

@@ -42,4 +42,4 @@ summary.bic.mlogit <- function(object, ...) {
 
 imageplot.mlogit <- function(x, ...) imageplot.bma(x$bic.glm, ...)
 
-plot.bic.mlogit <- function(x, ...) plot.bic.glm(x$bic.glm, ...)
+plot.bic.mlogit <- function(x, ...) plot(x$bic.glm, ...)

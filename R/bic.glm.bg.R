@@ -184,7 +184,9 @@
     else cl <- call
     options(contrasts = c("contr.treatment", "contr.treatment"))
     prior.weight.denom <- 0.5^ncol(x)
-    x <- data.frame(x)
+    #x <- data.frame(x)
+    x <- as.data.frame(x)
+    LEVELS <- lapply( x, levels)
     names.arg <- names(x)
     if (is.null(names.arg)) 
         names.arg <- paste("X", 1:ncol(x), sep = "")
@@ -206,9 +208,13 @@
         data = x.df)
     glm.assign <- create.assign(x)
     fac.levels <- unlist(lapply(glm.assign, length)[-1])
+    varNames <- names.arg
     if (factors) {
         cdf <- cbind.data.frame(y = y, x)
-        mm <- model.matrix(formula(cdf), data = cdf)[, -1, drop = FALSE]
+        #mm <- model.matrix(formula(cdf), data = cdf)[, -1, drop = FALSE]
+        ncoly <- if (is.null(dim(y))) 1 else ncol(y)
+        mm <- model.matrix(formula(cdf), data = cdf)[, -(1:ncoly), drop=FALSE]
+        varNames <- colnames(mm) 
         mmm <- data.frame(matrix(mm, nrow = nrow(mm), byrow = FALSE))
         names(mmm) <- dimnames(mm)[[2]]
         output.names <- names(mmm)
@@ -274,6 +280,7 @@
     if (factor.type == FALSE) 
         fac.levels <- unlist(lapply(glm.assign, length)[-1])
     famname <- glm.out$family["family"]$family
+    linkinv <- glm.out$family["linkinv"]$linkinv
     if (is.null(dispersion)) {
         if (famname == "poisson" | famname == "binomial") 
             dispersion <- FALSE
@@ -620,6 +627,10 @@
     CEbi[1]<- Ebi[1]
 
     names(output.names) <- var.names
+    postmean <- as.vector(Ebi)
+    varNames <- gsub("`","",varNames) # work around budwormEX problem    
+    colnames(EbiMk) <- names(postmean) <- c("(Intercept)", varNames)
+    names(probne0) <- if (factor.type) names.arg else varNames
     
     # HS start
     # re-order coefficients so that intercepts are first
@@ -637,8 +648,9 @@
 	# HS added the indices new.idx and new.idx.w.int
     result <- list(postprob = postprob, label = label, deviance = dev, 
         size = size, bic = bic, prior.param = prior.param[new.idx], prior.model.weights = prior/prior.weight.denom, 
-        family = famname, disp = disp, which = which[,new.idx], probne0 = c(probne0)[new.idx], 
-        postmean = as.vector(Ebi)[new.idx.w.int], postsd = as.vector(SDbi)[new.idx.w.int], 
+        family = famname, linkinv = linkinv, levels = LEVELS, disp = disp, which = which[,new.idx], 
+        probne0 = c(probne0)[new.idx], 
+        postmean =postmean[new.idx.w.int], postsd = as.vector(SDbi)[new.idx.w.int], 
         condpostmean = CEbi[new.idx.w.int], condpostsd = CSDbi[new.idx.w.int], mle = EbiMk[,new.idx.w.int, drop=FALSE], 
         se = sebiMk[,new.idx.w.int, drop=FALSE], namesx = var.names[new.idx], reduced = reduced, dropped = dropped, 
         call = cl, n.models = length(postprob), n.vars = length(probne0), 
@@ -670,6 +682,11 @@ function (f, data,
     tms.order <- attr(tms, "order")
     tms.labels <- attr(tms, "term.labels")
     mm <- model.matrix(tms, data = data)
+############################################################################
+## change to facilitate predict 10/2011 CF
+#   tms.labels <- colnames(mm) 
+#   if (tms.labels[1] == "(Intercept)") tms.labels <- tms.labels[-1]
+############################################################################
     assn <- attr(mm, "assign")
     nterms <- max(assn)
     datalist <- eval(attr(tms, "variables"), envir = data)
@@ -711,17 +728,26 @@ function (f, data,
         }
     }
     moddata <- moddata[, -1, drop=FALSE]
-    cnames <- gsub(":", ".", cnames)
-    moddata <- moddata
-    colnames(moddata) <- c(cnames)
-   # newf <- paste("+", cnames, sep = "", collapse = "")
-   # newf <- paste(resp.name, "~1", newf, sep = "", collapse = "")
-   # newf <- formula(newf)
-   # n.col.y<- dim(datalist[[1]])[2]
-   # nv <- ncol(moddata) - n.col.y
+########################################################################
+## deleted to facilitate predict 10/2011 CF
+##  cnames <- gsub(":", ".", cnames)
+##  moddata <- moddata
+##  colnames(moddata) <- c(cnames)
+    colnames(moddata) <- cnames
+########################################################################
+# caution: at least x needs to be assigned before the call (don't know why) CF
     y <- datalist[[1]]
-    x <- moddata
-    bic.glm.bg(x, y, 
+    if (!is.null(dim(y))) {
+      ncases <- apply( y, 1, sum)
+      index <- rep( 1:nrow(y), ncases)
+      x <- moddata[index,]
+      wt <- wt[index]
+      y <- as.vector(apply( y, 1, function(n) c(rep(0,n[1]),rep(1,n[2]))))
+    }
+    else {
+    	x <- moddata
+    }
+    result <- bic.glm.bg(x=x, y=y, 
     	mnl=mnl, # HS
     	glm.family, 
     	approx=approx, include.intercepts=include.intercepts, # HS
@@ -732,6 +758,13 @@ function (f, data,
         verbose=verbose, # HS
         ...
         )
+########################################################################
+## added to facilitate predict 10/2011 CF
+########################################################################
+    result$formula <- f
+    result$x <- moddata
+    result$y <- datalist[[1]]
+    result
 }
 
 "bic.glm.bg.matrix" <- bic.glm.bg.data.frame
