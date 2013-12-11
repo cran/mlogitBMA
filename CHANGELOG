@@ -1,3 +1,8 @@
+CHANGES for Version 0.1-6 (12/11/2013):
+- Vignette put into vignettes directory
+- updated bic.glm.bg t reflect changes in BMA 3.16
+- fwleaps copied from BMA to avoid NOTE
+
 CHANGES for Version 0.1-5 (02/21/2012):
 - NAMESPACE added
 - bic.glm.bg synchronized with bic.glm in BMA

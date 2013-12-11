@@ -1,0 +1,133 @@
+\documentclass[a4paper]{article}
+%\VignetteIndexEntry{Conversion Details}
+%\VignettePackage{mlogitBMA}
+
+\parindent0cm
+
+\title{Estimation of multinomial logit model using the Begg \& Gray approximation}
+\author{Hana \v{S}ev\v{c}\'{\i}kov\'{a} and Adrian Raftery}
+
+\begin{document}
+\maketitle
+
+\vspace{1cm}
+
+\section{MNL Model Specification}
+Our observations correspond to $N$ individuals each of whom makes one choice out of  $J$ alternatives. The dependent variable, $Y_n$, is the choice made by the $n$-th individual.  The set of independent variables is divided into a set of variables that are individual-specific, say $X_n=(x_{n1}, \dots, x_{nK_o})^T$, and a set of variables that are alternative-specific, say $W_{ni}=(w_{ni1}, \dots, w_{niK_a})^T$, $i=1,\dots,J$. The probability of individual $n$ choosing alternative $i$ is given by the standard multinomial logit formula
+
+\begin{equation}
+P_{ni} = \frac{e^{V_{ni}}}{\sum_{j=1}^{J}e^{V_{nj}}} \quad \mbox{where}\;\; V_{ni} = \alpha_{i0} + \mathbf{\alpha}_iX_n +  \mathbf{\beta}_iW_{ni}
+\end{equation}
+Here, $\alpha_i = (\alpha_{i1},\dots,\alpha_{iK_o})$ and $\beta_i = (\beta_{i1},\dots,\beta_{iK_a})$. We call $\alpha_{10},\dots,\alpha_{J0}$ the alternative-specific constants.
+
+It is often of interest to constrain the coefficients to be the same over the given set of alternatives, i.e. $\alpha_{1k} = \alpha_{2k} \cdots = \alpha_{Jk}$ for a given $k$. The same applies to the $\beta$ coefficients.
+
+\paragraph{Base Alternative}~\\[2mm]
+In order to be able to use the Begg \& Gray approximation~\cite{begggray84}, we need to set a base alternative and treat the remaining alternatives as differences to the base. Thus, if the base alternative is 1, $V_{n1} = 0$ for all $n$. Furthermore,  
+
+\begin{equation}
+\label{eq:mnl-V}
+V_{ni} = \alpha_{i0} + \mathbf{\alpha}_iX_n +  \mathbf{\beta}_iW'_{ni} \quad \mbox{where}\;\; W'_{ni} = W_{ni} - W_{n1} \quad \mbox{for} \;\; i=2,\dots J
+\end{equation}
+
+\section{Conversion}
+The conversion is done analogously to~\cite{yeung05}. 
+We decompose the original dataset into $D_0 = \{D_b, D_r\}$, where $D_b$ denotes the set of individuals that chose the base alternative, and  $D_r$ denotes the set of the remaining individuals. For each $i=1,\dots, J$, set $N_i$ to be the number of individuals that chose alternative $i$. Then the converted dataset is constructed as follows: 
+\begin{enumerate}
+\item Form $J$ matrices $M_1, \dots, M_J$ where each $M_i$ has $N_i$ rows and the columns consist of  $Y$, $X$ and $U=W'_{\cdot i}$.
+\item Form $J-1$ blocks, $D_2, \dots, D_J$, where $D_i$ has $(N_1+N_i)$ rows and is formed as follows:
+	\begin{enumerate}
+	\item Take the rows of $M_1$ and $M_i$.
+	\item Add columns:
+		\begin{itemize}
+			\item $Y^* = \left\{ \begin{array}{r@{\quad:\quad}l}
+	0 & Y=1 \\ 1 & \mbox{otherwise}
+	\end{array} \right.$
+			\item $\{Z_2, \dots, Z_J\}$, where $Z_j = \left\{ \begin{array}{r@{\quad:\quad}l}\mathbf{1} & j=i\\
+											\mathbf{0} & \mbox{otherwise}\end{array} \right.$
+			\item $\{Z_2X, \dots, Z_JX\}$
+			\item $\{Z_2U, \dots, Z_JU\}$
+		\end{itemize}
+	\end{enumerate} 
+\item Combine the rows of $D_2, \dots, D_J$.
+\end{enumerate}
+
+
+The approximated binary logistic model is given by
+\begin{equation}
+\mbox{logit}(P[Y^*=1]) =  \gamma_2 + \sum_{l=3}^{J} \gamma_l Z_l + \sum_{k=1}^{K_o} Q(\delta_{(\cdot)k}, X_k) +  \sum_{k=1}^{K_a} Q(\theta_{(\cdot)k}, U_k)
+\end{equation}
+where 
+\begin{displaymath}
+Q(\tau_{(\cdot)k}, S) = \left\{ \begin{array}{l@{\quad}c@{\quad}l}
+			\tau_k S & : & \mbox{if the coefficients of } S \mbox{ are contrained to be}\\
+			&& \mbox{the same for all alternatives, i.e. }\tau_{(\cdot)k} =  \tau_k\\
+			\sum_{l=2}^{J} \tau_{lk} Z_l S & : &  \mbox{otherwise}
+			\end{array} \right.
+\end{displaymath}
+Given estimated coefficients $\widehat{\gamma}$, $\widehat{\delta}$ and $\widehat{\theta}$, estimators of the coefficients of the original model in Equation~(\ref{eq:mnl-V}) are given by:
+\begin{eqnarray*}
+&& \widehat{\alpha}_{10} = 0, \;\; \widehat{\alpha}_{20} =\widehat{ \gamma}_2, \;\; \widehat{\alpha}_{i0} = \widehat{\gamma}_i + \widehat{\gamma}_2, \quad \mbox{for} \;\; i=3,\dots, J\\
+&&  \widehat{\alpha}_{ik} = \widehat{\delta}_{ik}, \quad  \mbox{for} \;\;  i=2,\dots, J, \;\;  k=1,\dots,K_o \\
+&& \widehat{\beta}_{ik} = \widehat{\theta}_{ik}, \quad  \mbox{for} \;\;  i=2,\dots, J, \;\;  k=1,\dots,K_a
+\end{eqnarray*}
+
+\section{Example}
+Consider the following toy dataset with eight individuals, four alternatives and two independent variables, $X$ and $W$:
+\[
+\begin{array}{ccccccc}
+\mbox{id} &Y&	X&	W_1&W_2&W_3&W_4\\\hline
+1&	1&	x_1&w_{11}&	w_{12}&w_{13}&w_{14} \\
+2&	1&	x_2&w_{21}&	w_{22}&w_{23}&w_{24} \\
+3&	2&	x_3&w_{31}&	w_{32}&w_{33}&w_{34} \\
+4&	2&	x_4&w_{41}&	w_{42}&w_{43}&w_{44} \\
+5&	3&	x_5&w_{51}&	w_{52}&w_{53}&w_{54} \\
+6&	3&	x_6&w_{61}&	w_{62}&w_{63}&w_{64} \\
+7&	4&	x_7&w_{71}&	w_{72}&w_{73}&w_{74} \\
+8&	4&	x_8&w_{81}&	w_{82}&w_{83}&w_{84} \\
+\end{array}
+\]
+
+Setting the base alternative to $1$, the converted dataset is of the form:
+\[
+\begin{array}{cccccccccccccc}
+ & Y &  X & U & Y^* & Z_2 & Z_3 & Z_4 & Z_2X & Z_3X & Z_4X &  Z_2U & Z_3U & Z_4U \\\hline\hline
+ & 1 & x_1 & w_{12}-w_{11} & 0 & 1 & 0 & 0 &   x_1 & 0& 0 & w_{12}-w_{11}& 0& 0\\
+D_2 & 1 & x_2 & w_{22}-w_{21} & 0 & 1 & 0 & 0 &   x_2 & 0& 0 & w_{22}-w_{21}& 0& 0\\
+ & 2 & x_3 & w_{32}-w_{31} & 1 & 1 & 0 & 0 &   x_3 & 0& 0 & w_{32}-w_{31}& 0& 0\\
+ & 2 & x_4 & w_{42}-w_{41} & 1 & 1 & 0 & 0 &   x_4 & 0& 0 & w_{42}-w_{41}& 0& 0\\\hline
+& 1 & x_1 & w_{13}-w_{11} & 0 & 0 & 1 & 0 &   0 & x_1 & 0 & 0 & w_{13}-w_{11}& 0\\
+D_3 & 1 & x_2 & w_{23}-w_{21} & 0 & 0 & 1 & 0 &   0 & x_2 & 0 & 0 & w_{23}-w_{21}& 0\\
+& 3 & x_5 & w_{53}-w_{51} & 1 & 0 & 1 & 0 &   0 & x_5 & 0 & 0 & w_{53}-w_{51}& 0\\
+& 3 & x_6 & w_{63}-w_{61} & 1 & 0 & 1 & 0 &   0 & x_6 & 0 & 0 & w_{63}-w_{61}& 0\\\hline
+& 1 & x_1 & w_{14}-w_{11} & 0 & 0 & 0 & 1 &   0 & 0 & x_1 & 0 & 0 & w_{14}-w_{11}\\
+D_4& 1 & x_2 & w_{24}-w_{21} & 0 & 0 & 0 & 1 &   0 & 0 & x_2 & 0 & 0 & w_{24}-w_{21}\\
+& 4 & x_7 & w_{74}-w_{71} & 1 & 0 & 0 & 1 &   0 & 0 & x_7 & 0 & 0 & w_{74}-w_{71}\\
+& 4 & x_8 & w_{84}-w_{81} & 1 & 0 & 0 & 1 &   0 & 0 & x_8 & 0 & 0 & w_{84}-w_{81}
+\end{array}
+\]
+An MNL model, specified in {\tt mlogitBMA} by $Y \sim 1 \;|\; X + U$, is approximated using the logit model
+\[
+Y^* \sim Z_3 + Z_4 + Z_2 X + Z_3 X + Z_4 X + Z_2 U + Z_3 U + Z_4 U
+\]
+
+The MNL coefficients from Equation~(\ref{eq:mnl-V}) correspond to:
+\begin{eqnarray*}
+(\alpha_{20},  \alpha_{2}, \beta_{2}) & = & (\mbox{Intercept},   \; Z_2 X \mbox{coef.},  \;   Z_2 U \mbox{coef.}) \\
+(\alpha_{30},  \alpha_{3}, \beta_{3}) & = & (\mbox{Intercept}+Z_3 \mbox{coef.},  \;  Z_3 X \mbox{coef.},  \;  Z_3 U \mbox{coef.}) \\
+(\alpha_{40},  \alpha_{4}, \beta_{4}) & = & (\mbox{Intercept}+Z_4 \mbox{coef.},  \;  Z_4 X \mbox{coef.},   \; Z_4 U \mbox{coef.})
+\end{eqnarray*}
+
+If we constrain the coefficients to be the same for all alternatives, i.e. $\alpha=\alpha_2=\alpha_3=\alpha_4$ and $\beta=\beta_2=\beta_3=\beta_4$, which is specified in {\tt mlogitBMA} by $Y \sim X + U$, the logit model
+\[
+Y^* \sim Z_3 + Z_4 + X +  U 
+\]
+is used as an approximation.
+In this case, $\alpha$ corresponds to the coefficient of $X$ and $\beta$ corresponds to the coefficient of $U$.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+\bibitem{begggray84} Begg, C.B., Gray, R. (1984) Calculation of polychotomous logistic regression parameters using individualized regressions. {\it Biometrika} {\bf 71}, 11--18.
+\bibitem{yeung05} Yeung, K.Y., Bumgarner, R.E., Raftery, A.E. (2005) Bayesian model averaging: development of an improved multi-class, gene selection and classification tool for microarray data. {\it Bioinformatics} {\bf 21} (10), 2394--2402.
+\end{thebibliography}
+\end{document}  

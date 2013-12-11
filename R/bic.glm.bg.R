@@ -53,13 +53,14 @@
         nret <- mb * kx
         Subss <- rep(0, times = nret)
         RSS <- Subss
+        # the fwleaps code is an exact copy of the one from the BMA package
         ans <- .Fortran("fwleaps", as.integer(nv), as.integer(it), 
             as.integer(kx), as.integer(nf), as.integer(no), as.integer(1), 
             as.double(2), as.integer(mb), as.double(rt), as.integer(nd), 
             as.integer(nc), as.integer(iw), as.integer(nw), as.double(rw), 
             as.integer(nr), as.double(t1), as.double(s2), as.integer(ne), 
             as.integer(iv), as.double(Subss), as.double(RSS), 
-            as.integer(nret), PACKAGE="BMA")
+            as.integer(nret), PACKAGE="mlogitBMA") 
         regid <- ans[[21]]/2
         r2 <- ans[[20]]
         nreg <- sum(regid > 0)
@@ -133,7 +134,9 @@
         while (length(glm.out$coefficients) > maxCol) {
             any.dropped <- TRUE
             dropglm <- drop1(glm.out, test = "Chisq")
-            dropped <- which.max(dropglm$"Pr(Chi)"[-1]) + 1
+#            dropped <- which.max(dropglm$"Pr(Chi)"[-1]) + 1
+			dropped <- which.max(dropglm$LRT[-1]) + 1
+			if (length(dropped) == 0) stop("dropped == 0")
             x.df <- x.df[, -(dropped - 1)]
             designx.levels <- designx.levels[-dropped]
             designx <- designx[-dropped]
@@ -255,9 +258,14 @@
     remaining <- xx$remaining.vars
     leaps.x <- xx$mm
     reduced <- xx$any.dropped
-    dropped <- NULL
-    if (reduced) 
-        dropped <- xx$dropped
+#    dropped <- NULL
+#    if (reduced) 
+#        dropped <- xx$dropped
+	dropped <- 0
+	if (reduced) {
+       dropped <- match(xx$dropped,varNames,nomatch=0)
+       varNames <- varNames[-dropped]
+    }
     nvar <- length(x[1, ])
     x <- x[, remaining, drop = FALSE]
     x <- data.frame(x)
@@ -630,7 +638,8 @@
     postmean <- as.vector(Ebi)
     varNames <- gsub("`","",varNames) # work around budwormEX problem    
     colnames(EbiMk) <- names(postmean) <- c("(Intercept)", varNames)
-    names(probne0) <- if (factor.type) names.arg else varNames
+    #names(probne0) <- if (factor.type) names.arg else varNames
+    names(probne0) <- if (factor.type) names.arg[-dropped] else varNames
     
     # HS start
     # re-order coefficients so that intercepts are first

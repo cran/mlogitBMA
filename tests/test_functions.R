@@ -69,4 +69,5 @@ test.specification()
 test.estimation.car()
 test.estimation.catsup()
 test.bic.mlogit.car()
-test.bic.mlogit.catsup()
+# turn off to speed the tests up
+#test.bic.mlogit.catsup()

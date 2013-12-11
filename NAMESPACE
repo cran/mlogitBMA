@@ -1,4 +1,4 @@
-#useDynLib(mlogitBMA)
+useDynLib(mlogitBMA)
 
 # export functions
 export(
