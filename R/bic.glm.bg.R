@@ -98,14 +98,14 @@
         asgn <- list()
         asgn[[1]] <- 1
         cnt <- 2
-        for (i in 1:ncol(x)) {
-            if (!is.factor(x[, i])) 
+        for (i in 1:ncol(xx)) {
+            if (!is.factor(xx[, i])) 
                 size <- 1
-            else size <- length(levels(x[, i])) - 1
+            else size <- length(levels(xx[, i])) - 1
             asgn[[i + 1]] <- cnt:(cnt + size - 1)
             cnt <- cnt + size
         }
-        names(asgn) <- c("(Intercept)", attributes(x)$names)
+        names(asgn) <- c("(Intercept)", attributes(xx)$names)
         return(asgn)
     }
 

@@ -1,3 +1,7 @@
+CHANGES for Version 0.1-7 (04/13/2022):
+- Added imports into NAMESPACE
+- Bug fix in leaps.glm
+
 CHANGES for Version 0.1-6 (12/11/2013):
 - Vignette put into vignettes directory
 - updated bic.glm.bg t reflect changes in BMA 3.16

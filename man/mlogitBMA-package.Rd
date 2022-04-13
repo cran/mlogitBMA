@@ -9,12 +9,6 @@ Bayesian Model Averaging for Multinomial Logit Models
 Provides a modified function \code{\link[BMA]{bic.glm}} of the \pkg{BMA} package that can be applied to multinomial logit (MNL) data. The data is converted to binary logit using the Begg & Gray approximation. The package also contains functions for maximum likelihood estimation of MNL models.
 }
 \details{
-\tabular{ll}{
-Package: \tab mlogitBMA\cr
-Version: \tab 0.1-6 \cr
-Date: \tab 2012-12-11\cr
-Depends: \tab R (>= 2.9.0), BMA, abind, maxLik \cr
-}
 The main function of the package is \code{\link{bic.mlogit}} which runs the Bayesian Model Averaging on multinomial logit data. Results can be explored using \code{\link{summary.bic.mlogit}}, \code{\link{imageplot.mlogit}}, or \code{\link{plot.bic.mlogit}} functions.
 
 An MNL estimation of a single model can be done using  \code{\link{estimate.mlogit}}. Use \code{\link{summary.mnl}} to view its results.

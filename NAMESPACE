@@ -1,5 +1,12 @@
 useDynLib(mlogitBMA)
 
+import(BMA)
+import(abind)
+import(maxLik)
+
+importFrom("stats", "coef", "drop1", "formula", "glm", "model.matrix",
+             "na.omit", "pnorm", "terms", "terms.formula")
+
 # export functions
 export(
 	bic.mlogit,
