@@ -1,15 +1,23 @@
 Package: mlogitBMA
 Type: Package
 Title: Bayesian Model Averaging for Multinomial Logit Models
-Version: 0.1-7
-Date: 2022-04-14
+Version: 0.1-9
+Date: 2024-10-16
 Depends: R (>= 2.9.0), BMA, abind, maxLik
 Suggests: mlogit
-Author: Hana Sevcikova, Adrian Raftery
-Maintainer: Hana Sevcikova <hanas@uw.edu>
+Authors@R: c(person(given = "Hana",
+                      family = "Sevcikova",
+                      role = c("aut", "cre"),
+                      email = "hanas@uw.edu"),
+               person(given = "Adrian",
+                      family = "Raftery",
+                      role = "aut"))
 Description: Provides a modified function bic.glm of the BMA package that can be applied to multinomial logit (MNL) data. The data is converted to binary logit using the Begg & Gray approximation. The package also contains functions for maximum likelihood estimation of MNL. 
 License: GPL (>= 2)
 NeedsCompilation: yes
-Packaged: 2022-04-13 23:12:14 UTC; hana
+Packaged: 2024-10-17 03:12:36 UTC; hana
+Author: Hana Sevcikova [aut, cre],
+  Adrian Raftery [aut]
+Maintainer: Hana Sevcikova <hanas@uw.edu>
 Repository: CRAN
-Date/Publication: 2022-04-13 23:32:29 UTC
+Date/Publication: 2024-10-17 16:30:02 UTC

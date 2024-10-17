@@ -1,5 +1,5 @@
-567800564b297b6bb59f89e3c4d61c29 *ChangeLog
-e84f714f0a1b7bf4a8e621239c7ca59b *DESCRIPTION
+7e3b103b302054f2aa1e2d30c38b992e *ChangeLog
+455df94c040cb1c5b130d8243100b369 *DESCRIPTION
 c16e845829cdb71f5952fcc236a0b4d3 *NAMESPACE
 ab49aae5d639d672110832710888e17b *R/bic.glm.bg.R
 6e9749e4103b638564ed88e4c0cac535 *R/bic.mogit.R
@@ -7,10 +7,10 @@ ab49aae5d639d672110832710888e17b *R/bic.glm.bg.R
 9d5cc5021449fb0989f916f3274a1fc2 *R/mlogit2logit.R
 5061ce0bf3a7faa5b712b3e27d069169 *R/mnl.R
 2801182ae547b2cc93554831f33df821 *R/mnl.spec.R
-9653fc5e25833e3799e1c93b0f197115 *build/vignette.rds
+e7a16040f5d13aee0498d85c152d6219 *build/vignette.rds
 42794343fd7506a2dd74bb0deb0bf836 *data/heating.txt.gz
 bbee7a4591880253996e8b86900b9de6 *inst/doc/conversion.Rnw
-babc78495c8c542fa2ec9f6c9a000087 *inst/doc/conversion.pdf
+dd4a2b59a619ec2c5add8ef37e73379d *inst/doc/conversion.pdf
 816af00669705e193eaeb16a434c3dde *man/bic.mlogit.Rd
 421439d65e68600137350b7fc9430b0c *man/estimate.mlogit.Rd
 654b658138160c4bb55e4aaabdedbe42 *man/heating.Rd
@@ -21,7 +21,7 @@ bc8d17d2be3b8a7b7f7e7f94ab34df28 *man/mnl.spec.Rd
 8923cb719a7067cf8506a1a92db972b4 *man/summary.bic.mlogit.Rd
 b201a09e13b262d8fa1af70b20fdae4d *man/summary.mnl.Rd
 3db6b6b6b215ccd20aba8a84c73766ca *man/summary.mnl.spec.Rd
-be4a8741b0b243d59b78184391cd1f5a *src/fwleaps.f
+051f1d52a7f9bf43f3942e36e29dce24 *src/fwleaps.f
 2bf1a60028e6c2979798122fd53c80c6 *src/mlogitBMA_init.c
 37cef22da2795a552861f92071fdafb2 *tests/test_functions.R
 bbee7a4591880253996e8b86900b9de6 *vignettes/conversion.Rnw
